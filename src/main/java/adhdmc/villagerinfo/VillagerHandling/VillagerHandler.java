@@ -7,6 +7,8 @@ import adhdmc.villagerinfo.VillagerInfo;
 import com.destroystokyo.paper.entity.villager.Reputation;
 import com.destroystokyo.paper.entity.villager.ReputationType;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -94,7 +96,7 @@ public class VillagerHandler implements Listener {
         ItemStack[] villagerInventoryContents = villagerClicked.getInventory().getContents();
         PersistentDataContainer villPDC =  villagerClicked.getPersistentDataContainer();
         UUID villUUID = villagerClicked.getUniqueId();
-        StringBuilder villOutput = new StringBuilder("");
+        TextComponent villOutput = Component.text("");
         if (VillagerInfo.isPaper) {
             Reputation playerReputation = villagerClicked.getReputation(pUUID);
             int playerReputationMP = playerReputation.getReputation(ReputationType.MAJOR_POSITIVE);
@@ -117,45 +119,44 @@ public class VillagerHandler implements Listener {
             }
         }
         villOutput.append(mMap.get(MESSAGE_TYPE.PREFIX));
-        StringBuilder villagerInventoryString = new StringBuilder("");
+        TextComponent villagerInventoryComponent = Component.text("");
         if(configInventory){
             for (int i = 0; i < villagerInventoryContents.length; i++) {
                 ItemStack villagerInventoryItem = villagerClicked.getInventory().getItem(i);
                 if (villagerInventoryItem != null) {
-                    villagerInventoryString.append("\n")
-                            .append(AQUA)
-                            .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
-                            .append(villagerInventoryItem.getType())
-                            .append(GRAY)
-                            .append(" (")
-                            .append(villagerInventoryItem.getAmount())
-                            .append(")");
+                    villagerInventoryComponent.append(Component.text("\n"))
+                            .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG)).color(NamedTextColor.AQUA)
+                            .append(Component.text(villagerInventoryItem.getType().toString()))
+                            .append(Component.text(" (").color(NamedTextColor.GRAY))
+                            .append(Component.text(villagerInventoryItem.getAmount())
+                            .append(Component.text(")")));
                 }
             }
         }
         if(configProfession) {
             if (villagerProfession.equals("NONE")) {
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.PROFESSION_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
                         .append(mMap.get(MESSAGE_TYPE.NONE_MSG));
             } else {
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.PROFESSION_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
-                        .append(villagerProfession);
+                        .append(Component.text(villagerProfession));
             }
         }
         if(configJobSite){
             if (villagerJobSite != null) {
-                villOutput.append("\n").append(mMap.get(MESSAGE_TYPE.JOBSITE_MSG))
+                villOutput.append(Component.text("\n"))
+                        .append(mMap.get(MESSAGE_TYPE.JOBSITE_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
-                        .append(villagerJobSite.getBlockX())
-                        .append("x, ")
-                        .append(villagerJobSite.getBlockY())
-                        .append("y, ")
-                        .append(villagerJobSite.getBlockZ())
-                        .append("z");
+                        .append(Component.text(villagerJobSite.getBlockX()))
+                        .append(Component.text("x, "))
+                        .append(Component.text(villagerJobSite.getBlockY()))
+                        .append(Component.text("y, "))
+                        .append(Component.text(villagerJobSite.getBlockZ()))
+                        .append(Component.text("z"));
                 villagerJobsiteLocation = villagerJobSite;
                 if(configHighlight){
                     if (villPDC.get(new NamespacedKey(VillagerInfo.plugin, "IsHighlighted"), PersistentDataType.INTEGER) == null ||
@@ -174,7 +175,7 @@ public class VillagerHandler implements Listener {
                     }
                 }
             } else {
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.JOBSITE_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
                         .append(mMap.get(MESSAGE_TYPE.NONE_MSG));
@@ -183,12 +184,12 @@ public class VillagerHandler implements Listener {
         if(configLastWorked) {
             if (villagerWorked != null) {
                 long mathTime = villagerClicked.getWorld().getGameTime() - villagerWorked;
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.LAST_WORKED_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
-                        .append(TimeFormatting.timeMath(mathTime));
+                        .append(Component.text(TimeFormatting.timeMath(mathTime)));
             } else {
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.LAST_WORKED_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
                         .append(mMap.get(MESSAGE_TYPE.NEVER_MSG));
@@ -196,31 +197,30 @@ public class VillagerHandler implements Listener {
         }
         if(configRestocks && villagerRestocks != Integer.MIN_VALUE) {
             if (villagerRestocks != 0){
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.RESTOCK_NUMBER_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
-                        .append(villagerRestocks);
+                        .append(Component.text(villagerRestocks));
             } else {
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.RESTOCK_NUMBER_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
-                        .append(GRAY)
-                        .append("0");
+                        .append(Component.text("0").color(NamedTextColor.GRAY));
             }
         }
         if(configHome) {
             if (villagerHome != null) {
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.HOME_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
-                        .append(villagerHome.getBlockX())
-                        .append("x, ")
-                        .append(villagerHome.getBlockY())
-                        .append("y, ")
-                        .append(villagerHome.getBlockZ())
-                        .append("z");
+                        .append(Component.text(villagerHome.getBlockX()))
+                        .append(Component.text("x, "))
+                        .append(Component.text(villagerHome.getBlockY()))
+                        .append(Component.text("y, "))
+                        .append(Component.text(villagerHome.getBlockZ()))
+                        .append(Component.text("z"));
             } else {
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.HOME_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
                         .append(mMap.get(MESSAGE_TYPE.NONE_MSG));
@@ -229,33 +229,33 @@ public class VillagerHandler implements Listener {
         if(configLastSlept) {
             if (villagerSlept != null) {
                 long mathTime = villagerClicked.getWorld().getGameTime() - villagerSlept;
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.LAST_SLEPT_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
-                        .append(mathTime);
+                        .append(Component.text(mathTime));
             } else {
-                villOutput.append("\n")
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.LAST_SLEPT_MSG))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
                         .append(mMap.get(MESSAGE_TYPE.NEVER_MSG));
             }
         }
         if(configInventory) {
-            if(villagerInventoryString.toString().equals("")){
-                villOutput.append("\n")
+            if(villagerInventoryComponent.equals(Component.text(""))){
+                villOutput.append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.INVENTORY_MSG))
-                        .append("\n")
+                        .append(Component.text("\n"))
                         .append(mMap.get(MESSAGE_TYPE.SEPARATOR_MSG))
                         .append(mMap.get(MESSAGE_TYPE.EMPTY_MSG));
             } else {
-            villOutput.append("\n")
+            villOutput.append(Component.text("\n"))
                     .append(mMap.get(MESSAGE_TYPE.INVENTORY_MSG))
-                    .append(villagerInventoryString);
+                    .append(Component.text(String.valueOf(villagerInventoryComponent)));
         }
         if(configReputation){
-            villOutput.append("\n")
+            villOutput.append(Component.text("\n"))
                   .append(mMap.get(MESSAGE_TYPE.REPUTATION_MSG))
-                  .append(ReputationHandler.villagerReputation(playerReputationTotal));
+                  .append(Component.text(ReputationHandler.villagerReputation(playerReputationTotal)));
             }
         }
         player.sendMessage(String.valueOf(villOutput));
