@@ -6,6 +6,7 @@ import adhdmc.villagerinfo.MiscHandling.TimeFormatting;
 import adhdmc.villagerinfo.VillagerInfo;
 import com.destroystokyo.paper.entity.villager.Reputation;
 import com.destroystokyo.paper.entity.villager.ReputationType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -24,6 +25,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.awt.*;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -78,7 +81,7 @@ public class VillagerHandler implements Listener {
             return;
         }
         event.setCancelled(true);
-        HashMap<MESSAGE_TYPE, String> mMap = MessageHandler.getMessages();
+        HashMap<MESSAGE_TYPE, Component> mMap = MessageHandler.getMessages();
         UUID pUUID = player.getUniqueId();
         Villager villagerClicked = (Villager) event.getRightClicked();
         String villagerProfession = villagerClicked.getProfession().toString();

@@ -3,6 +3,7 @@ package adhdmc.villagerinfo.Commands.SubCommands;
 import adhdmc.villagerinfo.MiscHandling.MessageHandler;
 import adhdmc.villagerinfo.VillagerInfo;
 import adhdmc.villagerinfo.Commands.SubCommand;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,12 +22,12 @@ public class ReloadCommand extends SubCommand {
         VillagerInfo.plugin.reloadConfig();
         MessageHandler.loadConfigMsgs();
         sender.sendMessage(MessageHandler.configReload);
-        if(MessageHandler.soundErrorMsg("") != null){
-            sender.sendMessage(MessageHandler.soundErrorMsg(""));
+        if(MessageHandler.soundErrorMsg(Component.text("")) != null){
+            sender.sendMessage(MessageHandler.soundErrorMsg(Component.text("")));
             }
         }
-        if(MessageHandler.timeErrorMsg("") != null){
-            sender.sendMessage(MessageHandler.timeErrorMsg(""));
+        if(MessageHandler.timeErrorMsg(Component.text("")) != null){
+            sender.sendMessage(MessageHandler.timeErrorMsg(Component.text("")));
         }
     }
 

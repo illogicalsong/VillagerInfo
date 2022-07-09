@@ -1,6 +1,11 @@
 package adhdmc.villagerinfo.MiscHandling;
 
 import adhdmc.villagerinfo.VillagerInfo;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,14 +18,14 @@ public class MessageHandler {
     public static FileConfiguration config = VillagerInfo.plugin.getConfig();
     private static final Pattern hexPattern = Pattern.compile("(&#[a-fA-F0-9]{6})");
 
-    public static String prefix;
-    public static String toggleOn, toggleOff, configReload;
-    public static String noPermission, noPermissionToggle, noCommand, timeError, soundError, notAPlayer;
-    public static String helpMain, helpToggle, helpReload;
-    public static String villagerProfessionMsg, villagerJobsiteMsg, villagerLastWorkedMsg, villagerNumRestocksMsg, villagerHomeMsg, villagerSleptMsg, villagerInventoryMsg, villagerNoneMsg, villagerNeverMsg, villagerSeparatorMsg, playerReputationMsg, villagerEmptyMsg;
+    public static Component prefix;
+    public static Component toggleOn, toggleOff, configReload;
+    public static Component noPermission, noPermissionToggle, noCommand, timeError, soundError, notAPlayer;
+    public static Component helpMain, helpToggle, helpReload;
+    public static Component villagerProfessionMsg, villagerJobsiteMsg, villagerLastWorkedMsg, villagerNumRestocksMsg, villagerHomeMsg, villagerSleptMsg, villagerInventoryMsg, villagerNoneMsg, villagerNeverMsg, villagerSeparatorMsg, playerReputationMsg, villagerEmptyMsg;
 
 
-    public static String colorParse(String s) {
+    /*public static String colorParse(String s) {
         Matcher matcher = hexPattern.matcher(s);
         while (matcher.find()) {
             String colorReplace = s.substring(matcher.start(), matcher.end());
@@ -30,6 +35,9 @@ public class MessageHandler {
         }
         s = ChatColor.translateAlternateColorCodes('&', s);
         return s;
+    }*/
+    public static Component colorParse(String s){
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(s);
     }
 
     public static void loadConfigMsgs(){
@@ -56,16 +64,16 @@ public class MessageHandler {
     villagerNeverMsg = colorParse(config.getString("villagerNeverMsg"));
     villagerEmptyMsg = colorParse(config.getString("villagerEmptyMsg"));
     playerReputationMsg = colorParse(config.getString("playerReputationMsg"));
-    soundError = soundErrorMsg("");
-    timeError = timeErrorMsg("");
+    soundError = soundErrorMsg(Component.text(""));
+    timeError = timeErrorMsg(Component.text(""));
     }
 
-    public static String soundErrorMsg(String s){
+    public static Component soundErrorMsg(Component s){
         Sound configSound = null;
         try {
             configSound = Sound.valueOf(config.getString("Sound"));
         } catch (IllegalArgumentException e) {
-            s = ChatColor.RED + "Configuration Error: Invalid Sound. Please choose from these options.\nhttps://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html";
+            s = Component.text("Configuration Error: Invalid Sound. Please choose from these options.\nhttps://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html", NamedTextColor.RED);
         }
         if (configSound != null) {
             s=null;
@@ -73,10 +81,10 @@ public class MessageHandler {
         return s;
     }
 
-    public static String timeErrorMsg(String s){
+    public static Component timeErrorMsg(Component s){
         int configTime = config.getInt("Length of time to highlight workstation");
         if (!(configTime > 0)){
-            s = ChatColor.RED + "Configuration Error: Invalid highlight time.\nIf you would like to disable this feature,\nplease set 'highlight workstation' to false.\nOtherwise please use an integer greater than zero";
+            s = Component.text("Configuration Error: Invalid highlight time.\nIf you would like to disable this feature,\nplease set 'highlight workstation' to false.\nOtherwise please use an integer greater than zero", NamedTextColor.RED);
         }
         return s;
     }
@@ -96,8 +104,8 @@ public class MessageHandler {
         REPUTATION_MSG
     }
 
-    public static HashMap<MESSAGE_TYPE, String> getMessages(){
-        HashMap<MESSAGE_TYPE, String> msgMap = new HashMap<>();
+    public static HashMap<MESSAGE_TYPE, Component> getMessages(){
+        HashMap<MESSAGE_TYPE, Component> msgMap = new HashMap<>();
         msgMap.put(MESSAGE_TYPE.PREFIX, prefix);
         msgMap.put(MESSAGE_TYPE.PROFESSION_MSG, villagerProfessionMsg);
         msgMap.put(MESSAGE_TYPE.JOBSITE_MSG, villagerJobsiteMsg);

@@ -3,7 +3,7 @@ author: IllogicalSong (Special thanks to Peashooter101)
 description: Easy access to information from villager's brains generally only accessable through the /data command.
 version: '${project.version}'
 main: adhdmc.villagerinfo.VillagerInfo
-api-version: 1.13
+api-version: 1.18
 commands:
   vill:
     description: vill
