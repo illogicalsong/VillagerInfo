@@ -3,6 +3,7 @@ package adhdmc.villagerinfo.Commands.SubCommands;
 import adhdmc.villagerinfo.Commands.SubCommand;
 import adhdmc.villagerinfo.MiscHandling.MessageHandler;
 import adhdmc.villagerinfo.VillagerInfo;
+import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,10 +29,10 @@ public class ToggleCommand extends SubCommand {
             return;
         }
         if (toggleSetting((Player) sender)) {
-            sender.sendMessage(MessageHandler.prefix + " " + MessageHandler.toggleOn);
+            sender.sendMessage(MessageHandler.prefix.append(Component.text(" ")).append(MessageHandler.toggleOn));
             return;
         }
-        sender.sendMessage(MessageHandler.prefix + " " + MessageHandler.toggleOff);
+        sender.sendMessage(MessageHandler.prefix.append(Component.text(" ")).append(MessageHandler.toggleOff));
         }
 
     private boolean toggleSetting(Player p) {
